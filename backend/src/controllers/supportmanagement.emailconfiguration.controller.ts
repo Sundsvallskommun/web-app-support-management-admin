@@ -1,16 +1,16 @@
 import ApiService from '@/services/api.service';
 import { logger } from '@/utils/logger';
 
-import { OpenAPI } from 'routing-controllers-openapi';
-import { Controller, Get, Body, Post, Put, Delete, Param, HttpCode } from 'routing-controllers';
+import { apiURL } from '@/config/api-config';
 import { EmailConfigurationCreateRequest, EmailConfigurationUpdateRequest } from '@/requests/supportmanagement.emailconfiguration.request';
 import { EmailConfigurationResponse } from '@/responses/supportmanagement.emailconfiguration.response';
-import { BASE_URL_SUPPORTMANAGEMENT } from '@/config/service-endpoints';
+import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put } from 'routing-controllers';
+import { OpenAPI } from 'routing-controllers-openapi';
 
 @Controller()
 export class SupportmanagementEmailconfigurationController {
   private apiService = new ApiService();
-  private baseUrl = BASE_URL_SUPPORTMANAGEMENT;
+  private baseUrl = apiURL("supportmanagement");
 
   @Get('/supportmanagement/municipality/:municipality/namespace/:namespace/emailconfiguration')
   @OpenAPI({ summary: 'Returns the email integration configuration defined within provided municipalityId and namespace' })

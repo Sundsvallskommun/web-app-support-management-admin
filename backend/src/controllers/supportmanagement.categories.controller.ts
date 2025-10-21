@@ -1,16 +1,16 @@
 import ApiService from '@/services/api.service';
 import { logger } from '@/utils/logger';
 
-import { OpenAPI } from 'routing-controllers-openapi';
-import { Controller, Get, Body, Post, Patch, Delete, Param, HttpCode } from 'routing-controllers';
+import { apiURL } from '@/config/api-config';
 import { CategoryCreateRequest, CategoryUpdateRequest } from '@/requests/supportmanagement.categories.request';
 import { CategoriesResponse, CategoryResponse } from '@/responses/supportmanagement.categories.response';
-import { BASE_URL_SUPPORTMANAGEMENT } from '@/config/service-endpoints';
+import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post } from 'routing-controllers';
+import { OpenAPI } from 'routing-controllers-openapi';
 
 @Controller()
 export class SupportmanagementCategoriesController {
   private apiService = new ApiService();
-  private baseUrl = BASE_URL_SUPPORTMANAGEMENT;
+  private baseUrl = apiURL("supportmanagement");
 
   @Get('/supportmanagement/municipality/:municipality/namespace/:namespace/categories')
   @OpenAPI({ summary: 'Returns all categories defined within provided municipalityId and namespace' })

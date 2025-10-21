@@ -1,15 +1,15 @@
-import ApiService from '@/services/api.service';
-import { logger } from '@/utils/logger';
-import { OpenAPI } from 'routing-controllers-openapi';
-import { Controller, Get, Body, Post, Patch, Delete, Param, HttpCode } from 'routing-controllers';
+import { apiURL } from '@/config/api-config';
 import { ContactreasonCreateRequest, ContactreasonUpdateRequest } from '@/requests/supportmanagement.contactreasons.request';
 import { ContactreasonsResponse } from '@/responses/supportmanagement.contactreasons.response';
-import { BASE_URL_SUPPORTMANAGEMENT } from '@/config/service-endpoints';
+import ApiService from '@/services/api.service';
+import { logger } from '@/utils/logger';
+import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post } from 'routing-controllers';
+import { OpenAPI } from 'routing-controllers-openapi';
 
 @Controller()
 export class SupportmanagementContactreasonsController {
   private apiService = new ApiService();
-  private baseUrl = BASE_URL_SUPPORTMANAGEMENT;
+  private baseUrl = apiURL("supportmanagement");
 
   @Get('/supportmanagement/municipality/:municipality/namespace/:namespace/contactreasons')
   @OpenAPI({ summary: 'Returns all contactreasons defined within provided municipalityId and namespace' })

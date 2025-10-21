@@ -1,9 +1,9 @@
+import { apiURL } from '@/config/api-config';
 import { RequestWithUser } from '@/interfaces/auth.interface';
 import ApiService from '@/services/api.service';
 import authMiddleware from '@middlewares/auth.middleware';
 import { Controller, Get, Req, Res, UseBefore } from 'routing-controllers';
 import { OpenAPI } from 'routing-controllers-openapi';
-import { BASE_URL_ACTIVEDIRECTORY } from '@/config/service-endpoints';
 
 export interface AdUser {
   description?: string;
@@ -20,7 +20,7 @@ export interface AdUser {
 @Controller()
 export class ActiveDirectoryController {
   private apiService = new ApiService();
-  private baseUrl = BASE_URL_ACTIVEDIRECTORY;
+  private baseUrl = apiURL("activedirectory");
 
   @Get('/users/admins')
   @OpenAPI({ summary: 'Return all users in configured admin group' })
