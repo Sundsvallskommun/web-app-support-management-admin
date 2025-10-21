@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, Card, MenuVertical, MenuVerticalProps, useSnackbar } from '@sk-web-gui/react';
 import LucideIcon from '@sk-web-gui/lucide-icon';
 import { useTranslation } from 'next-i18next';
-import { getLabels } from '@services/supportmanagement-service/supportmanagement-label-service';
+import { getLabels, PATH_SEPARATOR } from '@services/supportmanagement-service/supportmanagement-label-service';
 import { LabelInterface } from '@interfaces/supportmanagement.label';
 import { NamespaceInterface } from '@interfaces/supportmanagement.namespace';
 import { MunicipalityInterface } from '@interfaces/supportmanagement.municipality';
@@ -90,7 +90,7 @@ export const MainPageLabelsContent: React.FC<MainPageLabelsProps> = ({ municipal
               <div className={'label-info'}>
                 <p>
                   <span>{`${t('common:subpages.labels.label.name')}: `}</span>
-                  <b>{`${label.prefix || ''}`}{label.prefix && '.'}{`${label.resourceName}`}</b>
+                  <b>{`${label.prefix || ''}`}{label.prefix && PATH_SEPARATOR}{`${label.resourceName}`}</b>
                 </p>
                 <p>
                   <span>{`${t('common:subpages.labels.label.classification')}: `}</span>
@@ -126,7 +126,7 @@ export const MainPageLabelsContent: React.FC<MainPageLabelsProps> = ({ municipal
             <div className="submenu-info">
               <p>
                 <span>{`${t('common:subpages.labels.label.name')}: `}</span>
-                 <b>{`${label.prefix || ''}`}{label.prefix && '.'}{`${label.resourceName}`}</b>
+                 <b>{`${label.prefix || ''}`}{label.prefix && PATH_SEPARATOR}{`${label.resourceName}`}</b>
               </p>
               <p>
                 <span>{`${t('common:subpages.labels.label.classification')}: `}</span>

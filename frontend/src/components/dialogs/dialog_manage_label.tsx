@@ -5,7 +5,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'next-i18next';
 import { NamespaceInterface } from '@interfaces/supportmanagement.namespace';
 import { MunicipalityInterface } from '@interfaces/supportmanagement.municipality';
-import { createLabels, updateLabels } from '@services/supportmanagement-service/supportmanagement-label-service';
+import { createLabels, PATH_SEPARATOR, updateLabels } from '@services/supportmanagement-service/supportmanagement-label-service';
 import { LabelInterface } from '@interfaces/supportmanagement.label';
 import { v4 } from 'uuid';
 import _ from "lodash";
@@ -107,7 +107,7 @@ export const DialogManageLabel: React.FC<ManageLabelProps> = ({
   const findLabel = (fullName: string, nodes: LabelInterface[]): LabelInterface => {
     for (const index in nodes) {
       const node = nodes[index];
-      const nodeFullName = (node.prefix?.length || 0) === 0 ? node.resourceName : node.prefix + '.' + node.resourceName;
+      const nodeFullName = (node.prefix?.length || 0) === 0 ? node.resourceName : node.prefix + PATH_SEPARATOR + node.resourceName;
 
       if (nodeFullName === fullName) {
         return node;
@@ -170,7 +170,7 @@ export const DialogManageLabel: React.FC<ManageLabelProps> = ({
       labels: [
         ...labelProspect.labels || [],
         {
-          prefix: labelProspect.prefix ? labelProspect.prefix + '.' + labelProspect.resourceName : labelProspect.resourceName,
+          prefix: labelProspect.prefix ? labelProspect.prefix + PATH_SEPARATOR + labelProspect.resourceName : labelProspect.resourceName,
           resourceName: '',
           name: '',
           displayName: '',
@@ -281,7 +281,7 @@ export const DialogManageLabel: React.FC<ManageLabelProps> = ({
   const getPossibleDuplicateNames = (structure: LabelInterface[]): string[] => {
     if (structure) {
       const names = flatten(structure)
-        .map(entry => entry.prefix ? entry.prefix + '.' + entry.resourceName : entry.resourceName);
+        .map(entry => entry.prefix ? entry.prefix + PATH_SEPARATOR + entry.resourceName : entry.resourceName);
 
       return Array.from(new Set(names.filter((name, index) => names.some((match, idx) => match === name && idx !== index))));
     }
