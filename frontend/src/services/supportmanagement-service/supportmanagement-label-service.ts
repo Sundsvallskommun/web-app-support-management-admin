@@ -29,10 +29,11 @@ const mapToLabelInterfaces: (data: Label[]) => LabelInterface[] = (data) => {
 };
 
 const mapToLabelInterface: (data: Label) => LabelInterface = (data) => ({
-  uuid: v4(),
+  id: data.id,
   classification: data.classification,
-  prefix: extractPrefix(data.name),
-  name: extractName(data.name),
+  prefix: extractPrefix(data.resourceName),
+  resourceName: extractName(data.resourceName),
+  name: extractName(data.resourceName),
   displayName: data.displayName,
   isLeaf: data.labels === undefined || data.labels.length == 0,
   isNew: false,
@@ -76,8 +77,10 @@ const mapToLabels: (data: LabelInterface[]) => Label[] = (data) => {
 
 const mapToLabel: (data: LabelInterface) => Label = (data) => ({
   classification: data.classification,
-  name: data.prefix ? data.prefix + '.' + data.name : data.name,
+  resourceName: data.prefix ? data.prefix + '.' + data.resourceName : data.resourceName,
+  name: data.resourceName,
   displayName: data.displayName,
+  id: data.id ?? undefined,
   labels: mapToLabels(data.labels)
 });
 

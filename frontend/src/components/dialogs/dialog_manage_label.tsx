@@ -64,8 +64,8 @@ export const DialogManageLabel: React.FC<ManageLabelProps> = ({
     try {
       setSaving(true);
       const futureLabelStructure = _.cloneDeep(labelStructure);
-      const listWithMatch = findLabelList(labelProspect.uuid, futureLabelStructure) || [];
-      const matchingChildIdx = listWithMatch.findIndex(member => member.uuid === labelProspect.uuid);
+      const listWithMatch = findLabelList(labelProspect.id, futureLabelStructure) || [];
+      const matchingChildIdx = listWithMatch.findIndex(member => member.id === labelProspect.id);
     
       if (matchingChildIdx != -1) { // List where matching item is present has been found
         listWithMatch[matchingChildIdx] = labelProspect;
@@ -89,13 +89,13 @@ export const DialogManageLabel: React.FC<ManageLabelProps> = ({
     }
   };
 
-  const findLabelList = (uuid: string, nodes: LabelInterface[]): LabelInterface[] => {
+  const findLabelList = (id: string, nodes: LabelInterface[]): LabelInterface[] => {
     for (const index in nodes) {
       const node = nodes[index];
-      if (node.uuid == uuid) {
+      if (node.id == id) {
         return nodes;
       } else if (!node.isLeaf) {
-        const match = findLabelList(uuid, node.labels);
+        const match = findLabelList(id, node.labels);
         if (match != null) {
           return match;
         }
@@ -107,7 +107,7 @@ export const DialogManageLabel: React.FC<ManageLabelProps> = ({
   const findLabel = (fullName: string, nodes: LabelInterface[]): LabelInterface => {
     for (const index in nodes) {
       const node = nodes[index];
-      const nodeFullName = (node.prefix?.length || 0) === 0 ? node.name : node.prefix + '.' + node.name;
+      const nodeFullName = (node.prefix?.length || 0) === 0 ? node.resourceName : node.prefix + '.' + node.resourceName;
 
       if (nodeFullName === fullName) {
         return node;
@@ -127,9 +127,9 @@ export const DialogManageLabel: React.FC<ManageLabelProps> = ({
   };
 
   const handleNameInputChange = (input: string) => {
-    const future = { ...labelProspect, name: washInput(input) };
+    const future = { ...labelProspect, resourceName: washInput(input) };
     future.labels?.forEach((m) => {
-      m.prefix = future.name;
+      m.prefix = future.resourceName;
     });
 
     setLabelProspect(future);
@@ -145,7 +145,7 @@ export const DialogManageLabel: React.FC<ManageLabelProps> = ({
 
   const handleChildNameInputChange = (idx: number, input: string) => {
     const future = { ...labelProspect };
-    future.labels[idx].name = washInput(input);
+    future.labels[idx].resourceName = washInput(input);
     setLabelProspect(future);
   };
 
@@ -170,7 +170,8 @@ export const DialogManageLabel: React.FC<ManageLabelProps> = ({
       labels: [
         ...labelProspect.labels || [],
         {
-          prefix: labelProspect.prefix ? labelProspect.prefix + '.' + labelProspect.name : labelProspect.name,
+          prefix: labelProspect.prefix ? labelProspect.prefix + '.' + labelProspect.resourceName : labelProspect.resourceName,
+          resourceName: '',
           name: '',
           displayName: '',
           classification: childClassification,
@@ -214,7 +215,7 @@ export const DialogManageLabel: React.FC<ManageLabelProps> = ({
     let allValid = true;
 
     labelProspect?.labels?.map((m) => {
-      if (labelProspect.labels.filter((d) => d.name === m.name).length > 1) {
+      if (labelProspect.labels.filter((d) => d.resourceName === m.resourceName).length > 1) {
         allValid = false;
       }
     });
@@ -225,7 +226,7 @@ export const DialogManageLabel: React.FC<ManageLabelProps> = ({
   const validChilds = (): boolean => {
     let allHasValues = true;
     labelProspect?.labels?.map((m) => {
-      if (m.name.length == 0 || m.classification?.length == 0 || m.displayName.length == 0) {
+      if (m.resourceName.length == 0 || m.classification?.length == 0 || m.displayName.length == 0) {
         allHasValues = false;
       }
     });
@@ -242,8 +243,8 @@ export const DialogManageLabel: React.FC<ManageLabelProps> = ({
     setSaving(true);
 
     const futureLabelStructure = _.cloneDeep(labelStructure);
-    const listWithMatch = findLabelList(labelProspect.uuid, futureLabelStructure) || [];
-    const matchingChildIdx = listWithMatch.findIndex(member => member.uuid === labelProspect.uuid);
+    const listWithMatch = findLabelList(labelProspect.id, futureLabelStructure) || [];
+    const matchingChildIdx = listWithMatch.findIndex(member => member.id === labelProspect.id);
 
     if (matchingChildIdx != -1) { // List where matching item is present has been found
       listWithMatch[matchingChildIdx] = labelProspect;
@@ -280,7 +281,7 @@ export const DialogManageLabel: React.FC<ManageLabelProps> = ({
   const getPossibleDuplicateNames = (structure: LabelInterface[]): string[] => {
     if (structure) {
       const names = flatten(structure)
-        .map(entry => entry.prefix ? entry.prefix + '.' + entry.name : entry.name);
+        .map(entry => entry.prefix ? entry.prefix + '.' + entry.resourceName : entry.resourceName);
 
       return Array.from(new Set(names.filter((name, index) => names.some((match, idx) => match === name && idx !== index))));
     }
@@ -330,10 +331,11 @@ export const DialogManageLabel: React.FC<ManageLabelProps> = ({
   
     setLabelProspect({
       prefix: existingLabel?.prefix || '',
-      name: existingLabel?.name || '',
+      resourceName: existingLabel?.resourceName || '',
       displayName: existingLabel?.displayName || '',
+      name: existingLabel?.name || '',
       classification: existingLabel?.classification || existingLabelStructure?.[0]?.classification || '',
-      uuid: existingLabel?.uuid || v4(),
+      id: existingLabel?.id,
       isNew: existingLabel == null,
       isLeaf: existingLabel?.labels == undefined || existingLabel?.labels.length == 0,
       labels: existingLabel?.labels || [],
@@ -392,12 +394,12 @@ export const DialogManageLabel: React.FC<ManageLabelProps> = ({
           <div>
             {(labelProspect?.prefix || '').length > 0 &&
             <span>
-              {(labelProspect?.name || '').length > 0 && validChilds() &&
+              {(labelProspect?.resourceName || '').length > 0 && validChilds() &&
               <Link onClick={() => switchToLabel(`${labelProspect?.prefix}`)}>
                 <LucideIcon className="right-margin-50 label-up-navigation-icon hand-icon" size={18} name={'folder-up'}/>
               </Link>}
 
-              {((labelProspect?.name || '').length == 0 || !validChilds()) && 
+              {((labelProspect?.resourceName || '').length == 0 || !validChilds()) && 
               <LucideIcon className="right-margin-50 label-up-navigation-icon" size={18} name={'folder-up'} />}
             </span>
             }
@@ -413,7 +415,7 @@ export const DialogManageLabel: React.FC<ManageLabelProps> = ({
                     {labelProspect?.prefix}
                   .
                 </span>}
-                {labelProspect?.name}
+                {labelProspect?.resourceName}
               </span>
             </button>
             :
@@ -421,17 +423,17 @@ export const DialogManageLabel: React.FC<ManageLabelProps> = ({
               <Input.LeftAddin>
                 {labelProspect?.prefix}{labelProspect?.prefix && <>.</>}
               </Input.LeftAddin>
-              <Input className={'smaller'}
+              <Input
                 size={'md'}
                 maxLength={250}
                 placeholder={t('common:dialogs.manage_label.name_placeholder')}
-                value={labelProspect?.name || ''}
+                value={labelProspect?.resourceName || ''}
                 onChange={(e) => handleNameInputChange(e.target.value)}
               />
               <Input.RightAddin>
                 <LucideIcon
                   name={
-                    labelProspect?.name?.length > 0 ? showDisplayIcon('') : showDisplayIcon('shield-alert')
+                    labelProspect?.resourceName?.length > 0 ? showDisplayIcon('') : showDisplayIcon('shield-alert')
                   }
                   color={'warning'}
                 />
@@ -490,24 +492,24 @@ export const DialogManageLabel: React.FC<ManageLabelProps> = ({
           </Table.Header>
           <Table.Body>
             {labelProspect?.labels?.map((m, idx) => (
-              <Table.Row key={'child_name_input' + m.uuid}>
+              <Table.Row key={'child_name_input' + m.id}>
                 <Table.Column>
                   <Link 
-                    disabled={!(labelProspect?.name?.length > 0 && labelProspect?.classification?.length > 0 && labelProspect?.displayName?.length > 0 && validChilds())} 
-                    onClick={() => switchToLabel(`${m?.prefix}.${m?.name}`)}>
-                    <LucideIcon size={18} className={m?.name && 'hand-icon'} name={'folder-down'}/>
+                    disabled={!(labelProspect?.resourceName?.length > 0 && labelProspect?.classification?.length > 0 && labelProspect?.displayName?.length > 0 && validChilds())} 
+                    onClick={() => switchToLabel(`${m?.prefix}.${m?.resourceName}`)}>
+                    <LucideIcon size={18} className={m?.resourceName && 'hand-icon'} name={'folder-down'}/>
                   </Link>
 
                   {!m.isNew ?
                   <button
                     disabled
                     className={
-                      m?.name.length === 0 || !hasUniqueNames() ?
+                      m?.resourceName.length === 0 || !hasUniqueNames() ?
                         'sk-chip chip-input max-width chip-input-error'
                       : 'sk-chip chip-input max-width'
                     }
                   >
-                    {m.prefix}.{m.name}
+                    {m.prefix}.{m.resourceName}
                   </button>
                   :
                   <Input.Group className={'max-width'}>
@@ -517,13 +519,13 @@ export const DialogManageLabel: React.FC<ManageLabelProps> = ({
                     <Input className={'smaller'}
                       size={'md'}
                       placeholder={t('common:dialogs.manage_label.name_placeholder')}
-                      value={m.name}
+                      value={m.resourceName}
                       onChange={(e) => handleChildNameInputChange(idx, e.target.value)}
                     />
                     <Input.RightAddin>
                       <LucideIcon
                         name={
-                          m.name.length > 0 && hasUniqueNames() ? showDisplayIcon('') : showDisplayIcon('shield-alert')
+                          m.resourceName.length > 0 && hasUniqueNames() ? showDisplayIcon('') : showDisplayIcon('shield-alert')
                         }
                         color={'warning'}
                       />
@@ -574,7 +576,7 @@ export const DialogManageLabel: React.FC<ManageLabelProps> = ({
         <Button
           loading={saving}
           leftIcon={<LucideIcon name={'save'} />} 
-          disabled={!(labelProspect?.name?.length > 0 && labelProspect?.classification?.length > 0 && labelProspect?.displayName?.length > 0 && validChilds())}
+          disabled={!(labelProspect?.resourceName?.length > 0 && labelProspect?.classification?.length > 0 && labelProspect?.displayName?.length > 0 && validChilds())}
           color={'vattjom'}
           onClick={() => handleSaveLabels()}
         >

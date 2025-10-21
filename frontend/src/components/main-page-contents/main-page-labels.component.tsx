@@ -73,8 +73,8 @@ export const MainPageLabelsContent: React.FC<MainPageLabelsProps> = ({ municipal
     // If the label is leaf return a simple MenuVertical.Item
     if (label.isLeaf) {
       return (
-        <MenuVertical.Item key={label.uuid} id={label.uuid}>
-          {label.name && label.classification && (
+        <MenuVertical.Item key={label.id} id={label.id}>
+          {label.resourceName && label.classification && (
             <div className="menuitem-div">
               <p>
                 <b>{`${label.displayName}`}</b>
@@ -90,7 +90,7 @@ export const MainPageLabelsContent: React.FC<MainPageLabelsProps> = ({ municipal
               <div className={'label-info'}>
                 <p>
                   <span>{`${t('common:subpages.labels.label.name')}: `}</span>
-                  <b>{`${label.prefix || ''}`}{label.prefix && '.'}{`${label.name}`}</b>
+                  <b>{`${label.prefix || ''}`}{label.prefix && '.'}{`${label.resourceName}`}</b>
                 </p>
                 <p>
                   <span>{`${t('common:subpages.labels.label.classification')}: `}</span>
@@ -105,7 +105,7 @@ export const MainPageLabelsContent: React.FC<MainPageLabelsProps> = ({ municipal
     
     // If the label has sublabels, create a submenu
     return (
-      <MenuVertical.Item key={label.uuid} id={label.uuid}>
+      <MenuVertical.Item key={label.id} id={label.id}>
         <MenuVertical>
           <MenuVertical.SubmenuButton className="main-content-menu-vertical">
             <div>
@@ -122,11 +122,11 @@ export const MainPageLabelsContent: React.FC<MainPageLabelsProps> = ({ municipal
               </Button>
             </div>
           </MenuVertical.SubmenuButton>
-          <MenuVertical.Item key={label.uuid + '_info'}>
+          <MenuVertical.Item key={label.id + '_info'}>
             <div className="submenu-info">
               <p>
                 <span>{`${t('common:subpages.labels.label.name')}: `}</span>
-                 <b>{`${label.prefix || ''}`}{label.prefix && '.'}{`${label.name}`}</b>
+                 <b>{`${label.prefix || ''}`}{label.prefix && '.'}{`${label.resourceName}`}</b>
               </p>
               <p>
                 <span>{`${t('common:subpages.labels.label.classification')}: `}</span>

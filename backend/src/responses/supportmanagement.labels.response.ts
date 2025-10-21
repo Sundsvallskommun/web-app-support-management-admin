@@ -1,5 +1,5 @@
 import ApiResponse from '@interfaces/api-service.interface';
-import { IsString, ValidateNested } from 'class-validator';
+import { IsOptional, IsString, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 import { LabelInterface, LabelsInterface } from '@interfaces/supportmanagement.labels.interface';
 
@@ -12,22 +12,28 @@ export class LabelsResponse implements ApiResponse<Labels> {
 }
 
 export class Labels implements LabelsInterface {
-  @IsString()
-  created: string;
-  @IsString()
-  modified: string;
   @ValidateNested()
   @Type(() => Label)
   labelStructure: Label[];
 }
 
 export class Label implements LabelInterface {
+  // NOTE: Name will be removed in sm12 and only use resourceName
+  @IsString()
+  name: string;
+  @IsString()
+  resourceName: string;
   @IsString()
   classification: string;
   @IsString()
+  @IsOptional()
   displayName?: string;
   @IsString()
-  name: string;
+  @IsOptional()
+  resourcePath: string;
+  @IsString()
+  @IsOptional()
+  id: string;
   @ValidateNested()
   @Type(() => Label)
   labels?: Label[];

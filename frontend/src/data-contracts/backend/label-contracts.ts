@@ -1,13 +1,12 @@
 export interface LabelsApiResponse {
-  created: string;
-  modified: string;
   labelStructure: Label[];
 }
 
 export interface Label {
+  resourceName: string;
   classification: string;
   displayName?: string;
-  name: string;
+  id?: string;
   labels?: Label[];
 }
 
