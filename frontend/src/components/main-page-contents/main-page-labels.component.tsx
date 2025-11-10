@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { Button, Card, MenuVertical, MenuVerticalProps, useSnackbar } from '@sk-web-gui/react';
-import LucideIcon from '@sk-web-gui/lucide-icon';
-import { useTranslation } from 'next-i18next';
-import { getLabels, PATH_SEPARATOR } from '@services/supportmanagement-service/supportmanagement-label-service';
-import { LabelInterface } from '@interfaces/supportmanagement.label';
-import { NamespaceInterface } from '@interfaces/supportmanagement.namespace';
-import { MunicipalityInterface } from '@interfaces/supportmanagement.municipality';
 import { DialogManageLabel } from '@components/dialogs/dialog_manage_label';
+import { LabelInterface } from '@interfaces/supportmanagement.label';
+import { MunicipalityInterface } from '@interfaces/supportmanagement.municipality';
+import { NamespaceInterface } from '@interfaces/supportmanagement.namespace';
+import { getLabels } from '@services/supportmanagement-service/supportmanagement-label-service';
+import LucideIcon from '@sk-web-gui/lucide-icon';
+import { Button, Card, MenuVertical, MenuVerticalProps, useSnackbar } from '@sk-web-gui/react';
+import { useTranslation } from 'next-i18next';
+import React, { useEffect, useState } from 'react';
 import { v4 } from 'uuid';
 
 interface MainPageLabelsProps {
@@ -90,7 +90,7 @@ export const MainPageLabelsContent: React.FC<MainPageLabelsProps> = ({ municipal
               <div className={'label-info'}>
                 <p>
                   <span>{`${t('common:subpages.labels.label.name')}: `}</span>
-                  <b>{`${label.prefix || ''}`}{label.prefix && PATH_SEPARATOR}{`${label.resourceName}`}</b>
+                  <b>{`${label.resourcePath || ''}`}</b>
                 </p>
                 <p>
                   <span>{`${t('common:subpages.labels.label.classification')}: `}</span>
@@ -126,7 +126,8 @@ export const MainPageLabelsContent: React.FC<MainPageLabelsProps> = ({ municipal
             <div className="submenu-info">
               <p>
                 <span>{`${t('common:subpages.labels.label.name')}: `}</span>
-                 <b>{`${label.prefix || ''}`}{label.prefix && PATH_SEPARATOR}{`${label.resourceName}`}</b>
+                 <b>{`${label.resourcePath || ''}`}
+                 </b>
               </p>
               <p>
                 <span>{`${t('common:subpages.labels.label.classification')}: `}</span>

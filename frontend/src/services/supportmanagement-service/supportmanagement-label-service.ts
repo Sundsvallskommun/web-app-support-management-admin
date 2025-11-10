@@ -2,7 +2,7 @@ import { Label, LabelSaveRequest, LabelsApiResponse } from '@data-contracts/back
 import { LabelInterface, LabelSaveRequestInterface } from '@interfaces/supportmanagement.label';
 import { apiService } from '../api-service';
 
-export const PATH_SEPARATOR: string = '.';
+export const PATH_SEPARATOR: string = '/';
 
 const sortLabels = (labelStructure: LabelInterface[]) => {
   labelStructure?.forEach((label: LabelInterface) => {
@@ -32,28 +32,13 @@ const mapToLabelInterfaces: (data: Label[]) => LabelInterface[] = (data) => {
 const mapToLabelInterface: (data: Label) => LabelInterface = (data) => ({
   id: data.id,
   classification: data.classification,
-  prefix: extractPrefix(data.resourceName),
-  resourceName: extractName(data.resourceName),
-  name: extractName(data.resourceName),
+  resourcePath: data.resourcePath,
+  resourceName: data.resourceName,
   displayName: data.displayName,
   isLeaf: data.labels === undefined || data.labels.length == 0,
   isNew: false,
   labels: mapToLabelInterfaces(data.labels)
 });
-
-const extractName = (name: string): string => {
-  if (name && name.lastIndexOf(PATH_SEPARATOR) != -1) {
-    return name.substring(name.lastIndexOf(PATH_SEPARATOR) + 1);
-  }
-  return name;
-};
-
-const extractPrefix = (name: string): string => {
-  if (name && name.lastIndexOf(PATH_SEPARATOR) != -1) {
-    return name.substring(0, name.lastIndexOf(PATH_SEPARATOR));
-  }
-  return null;
-};
 
 export const getLabels: (municipality: string, namespace: string) => Promise<LabelInterface[]> = async (municipality, namespace) => {
   const url = `/supportmanagement/municipality/${municipality}/namespace/${namespace}/labels`;
@@ -78,8 +63,8 @@ const mapToLabels: (data: LabelInterface[]) => Label[] = (data) => {
 
 const mapToLabel: (data: LabelInterface) => Label = (data) => ({
   classification: data.classification,
-  resourceName: data.prefix ? data.prefix + PATH_SEPARATOR + data.resourceName : data.resourceName,
-  name: data.resourceName,
+  resourceName: data.resourceName,
+  resourcePath: data.resourcePath ?? '',
   displayName: data.displayName,
   id: data.id ?? undefined,
   labels: mapToLabels(data.labels)

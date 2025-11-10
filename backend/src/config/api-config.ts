@@ -1,4 +1,3 @@
-import { API_BASE_URL } from ".";
 
 //Subscribed APIS as lowercased
 export const APIS = [
@@ -8,7 +7,7 @@ export const APIS = [
   },
     {
     name: 'supportmanagement',
-    version: '11.0',
+    version: '12.0',
   },
       {
     name: 'activedirectory',
