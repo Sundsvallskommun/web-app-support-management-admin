@@ -8,10 +8,13 @@ export const Startpage: React.FC = () => {
   );
 };
 
-export const getServerSideProps = async ({ locale }) => ({
-  props: {
-    ...(await serverSideTranslations(locale, ['common', 'layout'])),
-  },
-});
+export const getServerSideProps = async (context) => {
+  const locale = context?.locale || 'sv'; // fallback to 'sv' if locale is undefined
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ['common', 'layout'])),
+    },
+  };
+};
 
 export default Startpage;
