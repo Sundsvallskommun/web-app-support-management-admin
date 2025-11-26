@@ -90,8 +90,11 @@ export default function Start() {
   );
 }
 
-export const getServerSideProps = async ({ locale }) => ({
-  props: {
-    ...(await serverSideTranslations(locale, ['common', 'login'])),
-  },
-});
+export const getServerSideProps = async (context) => {
+  const locale = context?.locale || 'sv'; // fallback to 'sv' if locale is undefined
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ['common', 'layout'])),
+    },
+  };
+};
