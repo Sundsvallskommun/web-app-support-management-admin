@@ -1,15 +1,15 @@
+import { apiURL } from '@/config/api-config';
+import { RoleCreateRequest, RoleUpdateRequest } from '@/requests/supportmanagement.roles.request';
+import { RoleResponse, RolesResponse } from '@/responses/supportmanagement.roles.response';
 import ApiService from '@/services/api.service';
 import { logger } from '@/utils/logger';
+import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post } from 'routing-controllers';
 import { OpenAPI } from 'routing-controllers-openapi';
-import { Controller, Get, Body, Post, Patch, Delete, Param, HttpCode } from 'routing-controllers';
-import { RoleCreateRequest, RoleUpdateRequest } from '@/requests/supportmanagement.roles.request';
-import { RolesResponse, RoleResponse } from '@/responses/supportmanagement.roles.response';
-import { BASE_URL_SUPPORTMANAGEMENT } from '@/config/service-endpoints';
 
 @Controller()
 export class SupportmanagementRolesController {
   private apiService = new ApiService();
-  private baseUrl = BASE_URL_SUPPORTMANAGEMENT;
+  private baseUrl = apiURL("supportmanagement");
 
   @Get('/supportmanagement/municipality/:municipality/namespace/:namespace/roles')
   @OpenAPI({ summary: 'Returns all roles defined within provided municipalityId and namespace' })

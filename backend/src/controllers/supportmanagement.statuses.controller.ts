@@ -1,15 +1,15 @@
-import ApiService from '@/services/api.service';
-import { logger } from '@/utils/logger';
-import { OpenAPI } from 'routing-controllers-openapi';
-import { Controller, Get, Body, Post, Patch, Delete, Param, HttpCode } from 'routing-controllers';
-import { BASE_URL_SUPPORTMANAGEMENT } from '@/config/service-endpoints';
+import { apiURL } from '@/config/api-config';
 import { StatusCreateRequest, StatusUpdateRequest } from '@/requests/supportmanagement.statuses.request';
 import { StatusesResponse, StatusResponse } from '@/responses/supportmanagement.statuses.response';
+import ApiService from '@/services/api.service';
+import { logger } from '@/utils/logger';
+import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post } from 'routing-controllers';
+import { OpenAPI } from 'routing-controllers-openapi';
 
 @Controller()
 export class SupportmanagementStatusesController {
   private apiService = new ApiService();
-  private baseUrl = BASE_URL_SUPPORTMANAGEMENT;
+  private baseUrl = apiURL("supportmanagement");
 
   @Get('/supportmanagement/municipality/:municipality/namespace/:namespace/statuses')
   @OpenAPI({ summary: 'Returns all statuses defined within provided municipalityId and namespace' })

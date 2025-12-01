@@ -1,7 +1,8 @@
-import { apiService } from '../api-service';
 import { Label, LabelSaveRequest, LabelsApiResponse } from '@data-contracts/backend/label-contracts';
 import { LabelInterface, LabelSaveRequestInterface } from '@interfaces/supportmanagement.label';
-import { v4 } from 'uuid';
+import { apiService } from '../api-service';
+
+export const PATH_SEPARATOR: string = '/';
 
 const sortLabels = (labelStructure: LabelInterface[]) => {
   labelStructure?.forEach((label: LabelInterface) => {
@@ -29,29 +30,15 @@ const mapToLabelInterfaces: (data: Label[]) => LabelInterface[] = (data) => {
 };
 
 const mapToLabelInterface: (data: Label) => LabelInterface = (data) => ({
-  uuid: v4(),
+  id: data.id,
   classification: data.classification,
-  prefix: extractPrefix(data.name),
-  name: extractName(data.name),
+  resourcePath: data.resourcePath,
+  resourceName: data.resourceName,
   displayName: data.displayName,
   isLeaf: data.labels === undefined || data.labels.length == 0,
   isNew: false,
   labels: mapToLabelInterfaces(data.labels)
 });
-
-const extractName = (name: string): string => {
-  if (name && name.lastIndexOf('.') != -1) {
-    return name.substring(name.lastIndexOf('.') + 1);
-  }
-  return name;
-};
-
-const extractPrefix = (name: string): string => {
-  if (name && name.lastIndexOf('.') != -1) {
-    return name.substring(0, name.lastIndexOf('.'));
-  }
-  return null;
-};
 
 export const getLabels: (municipality: string, namespace: string) => Promise<LabelInterface[]> = async (municipality, namespace) => {
   const url = `/supportmanagement/municipality/${municipality}/namespace/${namespace}/labels`;
@@ -76,8 +63,10 @@ const mapToLabels: (data: LabelInterface[]) => Label[] = (data) => {
 
 const mapToLabel: (data: LabelInterface) => Label = (data) => ({
   classification: data.classification,
-  name: data.prefix ? data.prefix + '.' + data.name : data.name,
+  resourceName: data.resourceName,
+  resourcePath: data.resourcePath ?? '',
   displayName: data.displayName,
+  id: data.id ?? undefined,
   labels: mapToLabels(data.labels)
 });
 

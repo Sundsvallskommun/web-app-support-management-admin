@@ -1,15 +1,15 @@
-import ApiService from '@/services/api.service';
-import { logger } from '@/utils/logger';
-import { OpenAPI } from 'routing-controllers-openapi';
-import { Controller, Get, Post, Put, Param, Body, HttpCode } from 'routing-controllers';
+import { apiURL } from '@/config/api-config';
 import { LabelSaveRequest } from '@/requests/supportmanagement.labels.request';
 import { LabelsResponse } from '@/responses/supportmanagement.labels.response';
-import { BASE_URL_SUPPORTMANAGEMENT } from '@/config/service-endpoints';
+import ApiService from '@/services/api.service';
+import { logger } from '@/utils/logger';
+import { Body, Controller, Get, HttpCode, Param, Post, Put } from 'routing-controllers';
+import { OpenAPI } from 'routing-controllers-openapi';
 
 @Controller()
 export class SupportmanagementLabelController {
   private apiService = new ApiService();
-  private baseUrl = BASE_URL_SUPPORTMANAGEMENT;
+  private baseUrl = apiURL('supportmanagement');
 
   @Get('/supportmanagement/municipality/:municipality/namespace/:namespace/labels')
   @OpenAPI({ summary: 'Returns a list of labels available for the provided municipalityId and namespace' })
@@ -29,7 +29,7 @@ export class SupportmanagementLabelController {
     }
     return response;
   }
-  
+
   @Post('/supportmanagement/municipality/:municipality/namespace/:namespace/labels')
   @OpenAPI({ summary: 'Creates label structure for the provided municipality and namespace (use when no existing structure is present)' })
   @HttpCode(201)
@@ -47,7 +47,7 @@ export class SupportmanagementLabelController {
 
     return true;
   }
-  
+
   @Put('/supportmanagement/municipality/:municipality/namespace/:namespace/labels')
   @OpenAPI({ summary: 'Updates label structure for the provided municipality and namespace' })
   @HttpCode(201)
@@ -65,5 +65,4 @@ export class SupportmanagementLabelController {
 
     return true;
   }
-
 }

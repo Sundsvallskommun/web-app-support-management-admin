@@ -73,7 +73,7 @@ const samlStrategy = new Strategy(
     idpCert: SAML_IDP_PUBLIC_CERT,
     issuer: SAML_ISSUER,
     wantAssertionsSigned: false,
-    acceptedClockSkewMs: 1000,
+    acceptedClockSkewMs: -1,
     logoutCallbackUrl: SAML_LOGOUT_CALLBACK_URL,
     wantAuthnResponseSigned: false,
     audience: false,

@@ -1,16 +1,16 @@
 import ApiService from '@/services/api.service';
 import { logger } from '@/utils/logger';
 
-import { OpenAPI } from 'routing-controllers-openapi';
-import { Controller, Get, Body, Post, Put, Delete, Param, HttpCode } from 'routing-controllers';
-import { NamespacesResponse, NamespaceResponse, MetadataResponse } from '@/responses/supportmanagement.namespace.response';
+import { apiURL } from '@/config/api-config';
 import { NamespaceCreateRequest, NamespaceUpdateRequest } from '@/requests/supportmanagement.namespace.request';
-import { BASE_URL_SUPPORTMANAGEMENT } from '@/config/service-endpoints';
+import { MetadataResponse, NamespaceResponse, NamespacesResponse } from '@/responses/supportmanagement.namespace.response';
+import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put } from 'routing-controllers';
+import { OpenAPI } from 'routing-controllers-openapi';
 
 @Controller()
 export class SupportmanagementNamespaceController {
   private apiService = new ApiService();
-  private baseUrl = BASE_URL_SUPPORTMANAGEMENT;
+  private baseUrl = apiURL("supportmanagement");
 
   @Get('/supportmanagement/municipality/:municipality/namespaces')
   @OpenAPI({ summary: 'Returns a list of namespaces available for the provided municipalityId' })

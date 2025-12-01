@@ -1,9 +1,9 @@
 export interface LabelInterface {
+  resourceName: string;
   classification: string;
   displayName?: string;
-  prefix?: string;
-  name: string;
-  uuid: string;
+  resourcePath?: string;
+  id?: string;
   isNew: boolean;
   isLeaf: boolean;
   labels?: LabelInterface[];
