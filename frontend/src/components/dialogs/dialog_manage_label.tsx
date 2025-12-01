@@ -434,7 +434,6 @@ export const DialogManageLabel: React.FC<ManageLabelProps> = ({
                   maxLength={250}
                   placeholder={t('common:dialogs.manage_label.name_placeholder')}
                   value={labelProspect?.resourceName || ''}
-                  readOnly
                   onChange={(e) => handleNameInputChange(e.target.value)}
                 />
                 <Input.RightAddin>
