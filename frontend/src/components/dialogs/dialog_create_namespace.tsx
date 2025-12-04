@@ -23,7 +23,7 @@ export const DialogCreateNamespace: React.FC<CreateNamespaceProps> = ({ open, mu
   const [namespaceAvailable, setNamespaceAvailable] = useState<boolean>(false);
   const [shortCodeAvailable, setShortCodeAvailable] = useState<boolean>(false);
   const [shortCodeInputChanged, setShortCodeInputChanged] = useState<boolean>(true);
-  
+
   const [savingNamespace, setSavingNamespace] = useState<boolean>(false);
   const snackBar = useSnackbar();
   const { t } = useTranslation();
@@ -78,8 +78,8 @@ export const DialogCreateNamespace: React.FC<CreateNamespaceProps> = ({ open, mu
     if (shortCodeInput.length === 0) return;
 
     isShortCodeAvailable(municipality.municipalityId, shortCodeInput)
-    .then((res) => setShortCodeAvailable(res))
-    .then(() => setShortCodeInputChanged(false));
+      .then((res) => setShortCodeAvailable(res))
+      .then(() => setShortCodeInputChanged(false));
   };
 
   const handleCreate = () => {
@@ -108,14 +108,6 @@ export const DialogCreateNamespace: React.FC<CreateNamespaceProps> = ({ open, mu
       position: 'top',
       closeable: false,
     });
-  };
-
-  const showDisplayIcon = (icon: string): React.ComponentPropsWithoutRef<IconProps['Component']>['id'] => {
-    if (namespaceInputChanged) {
-      return undefined;
-    }
-    if (icon === '') return undefined;
-    return icon;
   };
 
   useEffect(() => {
@@ -149,10 +141,9 @@ export const DialogCreateNamespace: React.FC<CreateNamespaceProps> = ({ open, mu
                   onChange={(e) => handleInputChange(e.target.value)}
                   onBlur={() => handleVerifyNamespace()}
                 />
-                <LucideIcon
-                  name={namespaceAvailable ? showDisplayIcon('shield-check') : showDisplayIcon('shield-alert')}
-                  color={namespaceAvailable ? 'gronsta' : 'warning'}
-                />
+                {namespaceAvailable ?
+                  <LucideIcon name={'shield-check'} color={'gronsta'} />
+                : <LucideIcon name={'shield-alert'} color={'warning'} />}
               </Input.RightAddin>
             </Input.Group>
           </div>
@@ -170,15 +161,13 @@ export const DialogCreateNamespace: React.FC<CreateNamespaceProps> = ({ open, mu
                   className={'input-shortcode'}
                   maxLength={3}
                   value={shortCodeInput}
-                  onChange={(e) => {setShortCodeInput(e.target.value); setShortCodeInputChanged(true);}}
+                  onChange={(e) => {
+                    setShortCodeInput(e.target.value);
+                    setShortCodeInputChanged(true);
+                  }}
                   onBlur={() => handleVerifyShortCode()}
                 />
-                <LucideIcon
-                  name={
-                    shortCodeAvailable || !namespaceAvailable ? showDisplayIcon('') : showDisplayIcon('shield-alert')
-                  }
-                  color={'warning'}
-                />
+                {(!shortCodeAvailable || namespaceAvailable) && <LucideIcon name={'shield-alert'} color={'warning'} />}
               </Input.RightAddin>
             </Input.Group>
           </div>
@@ -194,23 +183,28 @@ export const DialogCreateNamespace: React.FC<CreateNamespaceProps> = ({ open, mu
         <div>&nbsp;</div>
       </Dialog.Content>
       <Dialog.Buttons className={'container-right'}>
-
         <Button
           color={'vattjom'}
-          leftIcon={<LucideIcon name={'save'} />} 
-          disabled={!namespaceAvailable || shortCodeInput.length === 0 || displayNameInput.length === 0 || shortCodeInputChanged || !shortCodeAvailable}
+          leftIcon={<LucideIcon name={'save'} />}
+          disabled={
+            !namespaceAvailable ||
+            shortCodeInput.length === 0 ||
+            displayNameInput.length === 0 ||
+            shortCodeInputChanged ||
+            !shortCodeAvailable
+          }
           loading={savingNamespace}
           onClick={() => handleCreate()}
         >
           {t('common:buttons.create')}
         </Button>
 
-
-        <Button 
-          variant={'tertiary'} 
-          leftIcon={<LucideIcon name={'folder-output'} />} 
-          color={'vattjom'} 
-          onClick={() => handleOnClose(false)}>
+        <Button
+          variant={'tertiary'}
+          leftIcon={<LucideIcon name={'folder-output'} />}
+          color={'vattjom'}
+          onClick={() => handleOnClose(false)}
+        >
           {t('common:buttons.close')}
         </Button>
       </Dialog.Buttons>

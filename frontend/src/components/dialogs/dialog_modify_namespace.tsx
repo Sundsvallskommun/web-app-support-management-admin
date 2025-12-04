@@ -39,8 +39,7 @@ export const DialogModifyNamespace: React.FC<ModifyNamespaceProps> = ({ open, mu
 
   const handleVerifyShortCode = () => {
     if (shortCodeInput.length > 0 && shortCodeInput.toUpperCase() !== namespace?.shortCode.toUpperCase()) {
-      isShortCodeAvailable(municipality.municipalityId, shortCodeInput)
-      .then((res) => setShortCodeAvailable(res));
+      isShortCodeAvailable(municipality.municipalityId, shortCodeInput).then((res) => setShortCodeAvailable(res));
     } else {
       setShortCodeAvailable(true);
     }
@@ -60,8 +59,9 @@ export const DialogModifyNamespace: React.FC<ModifyNamespaceProps> = ({ open, mu
   };
 
   const confirmDelete = () => {
-    isMetadataPresent(municipality.municipalityId, namespace.namespace)
-      .then((res) => res ? setProblemOpen(true) : setConfirmOpen(true) );
+    isMetadataPresent(municipality.municipalityId, namespace.namespace).then((res) =>
+      res ? setProblemOpen(true) : setConfirmOpen(true)
+    );
   };
 
   const handleOnAbort = () => {
@@ -72,12 +72,12 @@ export const DialogModifyNamespace: React.FC<ModifyNamespaceProps> = ({ open, mu
     setConfirmOpen(false);
 
     deleteNamespace(municipality.municipalityId, namespace.namespace)
-    .then(() => setSavingNamespace(false))
-    .then(() => handleOnClose())
-    .catch((e) => {
-      handleError('Error when deleting namespace:', e, t('common:errors.errorDeletingNamespace'));
-    });
-  }
+      .then(() => setSavingNamespace(false))
+      .then(() => handleOnClose())
+      .catch((e) => {
+        handleError('Error when deleting namespace:', e, t('common:errors.errorDeletingNamespace'));
+      });
+  };
 
   const handleError = (errorDescription: string, e: Error, message: string) => {
     console.error(errorDescription, e);
@@ -94,11 +94,6 @@ export const DialogModifyNamespace: React.FC<ModifyNamespaceProps> = ({ open, mu
     });
   };
 
-  const showDisplayIcon = (icon: string): React.ComponentPropsWithoutRef<IconProps['Component']>['id'] => {
-    if (icon === '') return undefined;
-    return icon;
-  };
-
   useEffect(() => {
     document.addEventListener('keydown', escFunction, false);
 
@@ -111,7 +106,7 @@ export const DialogModifyNamespace: React.FC<ModifyNamespaceProps> = ({ open, mu
     setShortCodeInput(namespace?.shortCode || '');
     setDisplayNameInput(namespace?.displayName || '');
   }, []);
-  
+
   return (
     <Dialog
       show={open}
@@ -119,75 +114,59 @@ export const DialogModifyNamespace: React.FC<ModifyNamespaceProps> = ({ open, mu
       className="md:min-w-[60rem] dialog"
     >
       <Dialog.Content>
-
-        <Dialog
-          label={t('common:dialogs.confirm_header')}
-          className="dialog"
-          show={confirmOpen}
-        >
+        <Dialog label={t('common:dialogs.confirm_header')} className="dialog" show={confirmOpen}>
           <Dialog.Content>
-            <div className="bottom-margin-50">
-              {t('common:dialogs.manage_namespace.confirm_delete')}
-            </div>
+            <div className="bottom-margin-50">{t('common:dialogs.manage_namespace.confirm_delete')}</div>
           </Dialog.Content>
           <Dialog.Buttons className={'container-right'}>
-            <Button 
-              color={'vattjom'} 
-              leftIcon={<LucideIcon name={'check-square'} />} 
-              onClick={() => handleDeleteNamespace()}>
+            <Button
+              color={'vattjom'}
+              leftIcon={<LucideIcon name={'check-square'} />}
+              onClick={() => handleDeleteNamespace()}
+            >
               {t('common:buttons.confirm')}
             </Button>
-            <Button 
-              variant={'tertiary'} 
-              color={'vattjom'} 
-              leftIcon={<LucideIcon name={'square-x'} />} 
-              onClick={() => handleOnAbort()}>
+            <Button
+              variant={'tertiary'}
+              color={'vattjom'}
+              leftIcon={<LucideIcon name={'square-x'} />}
+              onClick={() => handleOnAbort()}
+            >
               {t('common:buttons.abort')}
             </Button>
           </Dialog.Buttons>
-        </Dialog>      
-
+        </Dialog>
         <Dialog
           label={t('common:dialogs.manage_namespace.header_metadata_exists')}
           className="dialog"
           show={problemOpen}
         >
           <Dialog.Content>
-            <div className="bottom-margin-50">
-              {t('common:dialogs.manage_namespace.metadata_exists')}
-            </div>
+            <div className="bottom-margin-50">{t('common:dialogs.manage_namespace.metadata_exists')}</div>
           </Dialog.Content>
           <Dialog.Buttons className={'container-right'}>
-            <Button 
-              variant={'tertiary'} 
-              color={'vattjom'} 
-              leftIcon={<LucideIcon name={'folder-output'} />} 
-              onClick={() => setProblemOpen(false)}>
+            <Button
+              variant={'tertiary'}
+              color={'vattjom'}
+              leftIcon={<LucideIcon name={'folder-output'} />}
+              onClick={() => setProblemOpen(false)}
+            >
               {t('common:buttons.close')}
             </Button>
           </Dialog.Buttons>
-        </Dialog>      
-
+        </Dialog>
         <div className="d-flex">
           <div>
             <p>{t('common:dialogs.manage_namespace.domain_name_input_heading')}:</p>
             <Input.Group>
               <Input.RightAddin icon>
-                <Input
-                  disabled={true}
-                  className={'upper-case'}
-                  value={namespace?.namespace}
-                />
+                <Input disabled={true} className={'upper-case'} value={namespace?.namespace} />
               </Input.RightAddin>
             </Input.Group>
           </div>
           <div>
             <p>{t('common:dialogs.manage_namespace.short_code_input_heading')}:</p>
-            <Input.Group
-              invalid={
-                (shortCodeInput.length === 0) || !shortCodeAvailable ? true : undefined
-              }
-            >
+            <Input.Group invalid={shortCodeInput.length === 0 || !shortCodeAvailable ? true : undefined}>
               <Input.RightAddin icon>
                 <Input
                   className={'input-shortcode'}
@@ -196,12 +175,7 @@ export const DialogModifyNamespace: React.FC<ModifyNamespaceProps> = ({ open, mu
                   onChange={(e) => setShortCodeInput(e.target.value)}
                   onBlur={() => handleVerifyShortCode()}
                 />
-                <LucideIcon
-                  name={
-                    shortCodeAvailable ? showDisplayIcon('') : showDisplayIcon('shield-alert')
-                  }
-                  color={'warning'}
-                />
+                {!shortCodeAvailable && <LucideIcon name={'shield-alert'} color={'warning'} />}
               </Input.RightAddin>
             </Input.Group>
           </div>
@@ -216,26 +190,24 @@ export const DialogModifyNamespace: React.FC<ModifyNamespaceProps> = ({ open, mu
         <div>&nbsp;</div>
       </Dialog.Content>
       <Dialog.Buttons className={'container-right'}>
-        <Button 
+        <Button
           disabled={!shortCodeInput || !shortCodeAvailable}
-          leftIcon={<LucideIcon name={'save'} />} 
-          loading={savingNamespace} 
-          color={'vattjom'} 
-          onClick={() => handleUpdate()}>
+          leftIcon={<LucideIcon name={'save'} />}
+          loading={savingNamespace}
+          color={'vattjom'}
+          onClick={() => handleUpdate()}
+        >
           {t('common:buttons.update')}
         </Button>
-        <Button
-          color={'juniskar'}
-          leftIcon={<LucideIcon name={'trash-2'} />} 
-          onClick={() => confirmDelete()}
-        >
+        <Button color={'juniskar'} leftIcon={<LucideIcon name={'trash-2'} />} onClick={() => confirmDelete()}>
           {t('common:buttons.delete')}
         </Button>
-        <Button 
-          variant={'tertiary'} 
-          color={'vattjom'} 
-          leftIcon={<LucideIcon name={'folder-output'} />} 
-          onClick={() => handleOnClose()}>
+        <Button
+          variant={'tertiary'}
+          color={'vattjom'}
+          leftIcon={<LucideIcon name={'folder-output'} />}
+          onClick={() => handleOnClose()}
+        >
           {t('common:buttons.close')}
         </Button>
       </Dialog.Buttons>
