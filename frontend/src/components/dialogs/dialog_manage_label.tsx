@@ -1,18 +1,18 @@
-import { Button, Link, Dialog, Input, useSnackbar, Table, IconProps, SnackbarProps } from '@sk-web-gui/react';
-import { List } from '@sk-web-gui/list';
-import LucideIcon from '@sk-web-gui/lucide-icon';
-import { useState, useEffect, useCallback } from 'react';
-import { useTranslation } from 'next-i18next';
-import { NamespaceInterface } from '@interfaces/supportmanagement.namespace';
+import { LabelInterface } from '@interfaces/supportmanagement.label';
 import { MunicipalityInterface } from '@interfaces/supportmanagement.municipality';
+import { NamespaceInterface } from '@interfaces/supportmanagement.namespace';
 import {
   createLabels,
   PATH_SEPARATOR,
   updateLabels,
 } from '@services/supportmanagement-service/supportmanagement-label-service';
-import { LabelInterface } from '@interfaces/supportmanagement.label';
-import { v4 } from 'uuid';
+import { List } from '@sk-web-gui/list';
+import LucideIcon from '@sk-web-gui/lucide-icon';
+import { Button, Dialog, Input, Link, SnackbarProps, Table, useSnackbar } from '@sk-web-gui/react';
 import _ from 'lodash';
+import { useTranslation } from 'next-i18next';
+import { useCallback, useEffect, useState } from 'react';
+import { v4 } from 'uuid';
 
 interface ManageLabelProps {
   open: boolean;
@@ -242,11 +242,6 @@ export const DialogManageLabel: React.FC<ManageLabelProps> = ({
     return allHasValues && hasUniqueNames() && hasUniqueDisplayNames();
   };
 
-  const showDisplayIcon = (icon: string): React.ComponentPropsWithoutRef<IconProps['Component']>['id'] => {
-    if (icon === '') return undefined;
-    return icon;
-  };
-
   const handleSaveLabels = () => {
     setSaving(true);
 
@@ -437,12 +432,7 @@ export const DialogManageLabel: React.FC<ManageLabelProps> = ({
                   onChange={(e) => handleNameInputChange(e.target.value)}
                 />
                 <Input.RightAddin>
-                  <LucideIcon
-                    name={
-                      labelProspect?.resourceName?.length > 0 ? showDisplayIcon('') : showDisplayIcon('shield-alert')
-                    }
-                    color={'warning'}
-                  />
+                  {labelProspect?.resourceName?.length === 0 && <LucideIcon name={'shield-alert'} color={'warning'} />}
                 </Input.RightAddin>
               </Input.Group>
             }
@@ -535,14 +525,9 @@ export const DialogManageLabel: React.FC<ManageLabelProps> = ({
                           onChange={(e) => handleChildNameInputChange(idx, e.target.value)}
                         />
                         <Input.RightAddin>
-                          <LucideIcon
-                            name={
-                              m.resourceName.length > 0 && hasUniqueNames() ?
-                                showDisplayIcon('')
-                              : showDisplayIcon('shield-alert')
-                            }
-                            color={'warning'}
-                          />
+                          {m.resourceName.length === 0 && !hasUniqueNames() && (
+                            <LucideIcon name={'shield-alert'} color={'warning'} />
+                          )}
                         </Input.RightAddin>
                       </Input.Group>
                     }

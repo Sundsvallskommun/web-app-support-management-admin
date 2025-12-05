@@ -1,5 +1,4 @@
 import { Button, Divider, Link, Logo, Header, Combobox , Avatar, Image, MenuVertical, useSnackbar, Tooltip } from '@sk-web-gui/react';
-import LucideIcon from '@sk-web-gui/lucide-icon';
 import NextLink from 'next/link';
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'next-i18next';
@@ -17,6 +16,7 @@ import { MainPageEmailConfigurationContent } from '@components/main-page-content
 import { getMunicipalities } from '@services/supportmanagement-service/supportmanagement-municipality-service';
 import { getNamespaces } from '@services/supportmanagement-service/supportmanagement-namespace-service';
 import { v4 } from 'uuid';
+import {LucideIcon} from '@sk-web-gui/lucide-icon';
 
 export const MainPageSidebar: React.FC = () => {
   const user = useUserStore((s) => s.user, shallow);
